@@ -2,13 +2,18 @@ const express = require('express');
 const { register } = require('module');
 const mongoose = require('mongoose')
 const path = require('path')
+require ("dotenv").config();
+
+const pass=process.env.PASSWORD
+
+
 const port=4000
 
 const app=express();
 app.use(express.static(__dirname))
 app.use(express.urlencoded({extended:true}))
 
-mongoose.connect('mongodb://127.0.0.1:27017/newregister')
+mongoose.connect(`mongodb+srv://manojbhakta481:${pass}@cluster0.6l61u.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0`)
 const db = mongoose.connection
 db.once('open',()=>{
     console.log("Mongodb connection successful")
@@ -31,7 +36,6 @@ app.get('/',(req,res)=>{
 
 app.post('/register',async(req,res)=>{
     const {name,email,password}=req.body
-    console.log(name);
     const newUser = new User({
         name,
         email,
@@ -51,7 +55,6 @@ app.post('/login',async(req,res)=>{
        if (!useremail) {
         return res.status(400).send("Invalid Email");
       }
-       console.log(useremail)
        if(useremail.password === password){
         res.sendFile(path.join(__dirname, 'Index.html'));
          
